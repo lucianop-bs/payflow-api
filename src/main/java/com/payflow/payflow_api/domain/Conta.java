@@ -1,5 +1,6 @@
 package com.payflow.payflow_api.domain;
 
+import com.payflow.payflow_api.exception.RegraDeNegocioException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -76,17 +77,17 @@ public class Conta {
 
     public void debitar(BigDecimal valor) {
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Valor deve ser maior que zero");
+            throw new RegraDeNegocioException("Valor deve ser maior que zero");
         }
         if (saldo.compareTo(valor) < 0) {
-            throw new RuntimeException("Saldo insuficiente");
+            throw new RegraDeNegocioException("Saldo insuficiente");
         }
         this.saldo = this.saldo.subtract(valor);
     }
 
     public void creditar(BigDecimal valor) {
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Valor deve ser maior que zero");
+            throw new RegraDeNegocioException("Valor deve ser maior que zero");
         }
         this.saldo = this.saldo.add(valor);
     }

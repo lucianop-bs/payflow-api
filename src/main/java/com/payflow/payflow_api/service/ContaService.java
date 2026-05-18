@@ -6,6 +6,7 @@ import com.payflow.payflow_api.dto.request.CriarContaRequest;
 import com.payflow.payflow_api.dto.request.DepositarRequest;
 import com.payflow.payflow_api.dto.response.ContaResponse;
 import com.payflow.payflow_api.dto.response.DepositoResponse;
+import com.payflow.payflow_api.exception.RecursoNaoEncontrado;
 import com.payflow.payflow_api.repository.ContaRepository;
 import com.payflow.payflow_api.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class ContaService {
 
     public ContaResponse criarConta(CriarContaRequest request) {
         Usuario usuario = usuarioRepository.findById(request.idUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontrado("Usuario não encontrado"));
 
         Conta conta = new Conta();
         conta.setNumeroConta(UUID.randomUUID());
@@ -41,7 +42,7 @@ public class ContaService {
 
     public DepositoResponse depositar(DepositarRequest request) {
         Conta contaDeposito = contaRepository.findByNumeroConta(request.numeroConta())
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontrado("Conta não encontrada"));
 
         contaDeposito.creditar(request.valor());
 

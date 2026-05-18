@@ -5,6 +5,7 @@ import com.payflow.payflow_api.domain.Transacao;
 import com.payflow.payflow_api.domain.enums.StatusTransacao;
 import com.payflow.payflow_api.dto.request.RealizarTransferenciaRequest;
 import com.payflow.payflow_api.dto.response.TransacaoResponse;
+import com.payflow.payflow_api.exception.RecursoNaoEncontrado;
 import com.payflow.payflow_api.repository.ContaRepository;
 import com.payflow.payflow_api.repository.TransacaoRepository;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,10 @@ public class TransacaoService {
     @Transactional
     public TransacaoResponse realizarTransferencia(RealizarTransferenciaRequest request) {
         Conta contaOrigem = contaRepository.findByNumeroConta(request.contaOrigem())
-                .orElseThrow(() -> new RuntimeException("Conta origem não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontrado("Conta origem não encontrada"));
 
         Conta contaDestinatario = contaRepository.findByNumeroConta(request.contaDestino())
-                .orElseThrow(() -> new RuntimeException("Conta destino não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontrado("Conta destino não encontrada"));
 
         Transacao transacao = new Transacao();
         transacao.setStatusTransacao(StatusTransacao.PROCESSANDO);
