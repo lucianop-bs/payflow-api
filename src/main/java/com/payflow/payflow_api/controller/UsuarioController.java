@@ -6,7 +6,10 @@ import com.payflow.payflow_api.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -22,5 +25,16 @@ public class UsuarioController {
     @ResponseStatus(CREATED)
     public UsuarioResponse criarUsuario(@RequestBody @Valid CriarUsuarioRequest request) {
         return usuarioService.criarUsuario(request);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(OK)
+    public UsuarioResponse buscarUsuario(@PathVariable Long id) {
+        return usuarioService.buscarUsuario(id);
+    }
+    @GetMapping()
+    @ResponseStatus(OK)
+    public List<UsuarioResponse> buscarTodos() {
+        return usuarioService.buscarTodos();
     }
 }
