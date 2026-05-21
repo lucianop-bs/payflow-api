@@ -1,4 +1,3 @@
 package com.payflow.payflow_api.dto.response;
 
-public record TransacaoResponse(Long idTransacao, String statusTransacao) {
-}
+public record TransacaoResponse(Long idTransacao, String statusTransacao,String descricao) {}

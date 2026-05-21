@@ -35,6 +35,22 @@ public class Conta {
     public Conta() {
     }
 
+    public List<Transacao> getTransacoesEnviadas() {
+        return transacoesEnviadas;
+    }
+
+    public void setTransacoesEnviadas(List<Transacao> transacoesEnviadas) {
+        this.transacoesEnviadas = transacoesEnviadas;
+    }
+
+    public List<Transacao> getTransacoesRecebidas() {
+        return transacoesRecebidas;
+    }
+
+    public void setTransacoesRecebidas(List<Transacao> transacoesRecebidas) {
+        this.transacoesRecebidas = transacoesRecebidas;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,4 +1,6 @@
 package com.payflow.payflow_api.dto.request;
 
-public record CriarContaRequest(Long idUsuario) {
+import jakarta.validation.constraints.NotNull;
+
+public record CriarContaRequest(@NotNull Long idUsuario) {
 }

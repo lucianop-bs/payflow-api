@@ -1,6 +1,7 @@
 package com.payflow.payflow_api.domain;
 
 import com.payflow.payflow_api.domain.enums.StatusTransacao;
+import com.payflow.payflow_api.domain.enums.TipoTransacao;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -21,17 +22,35 @@ public class Transacao {
     private LocalDateTime dataTransacao;
     @Enumerated(EnumType.STRING)
     private StatusTransacao statusTransacao;
+    @Enumerated(EnumType.STRING)
+    private TipoTransacao tipoTransacao;
     private BigDecimal valor;
 
-    public Transacao(Conta contaOrigem, Conta contaDestinatario, LocalDateTime dataTransacao, BigDecimal valor, StatusTransacao statusTransacao) {
+
+    public Transacao(Conta contaOrigem,
+                     Conta contaDestinatario,
+                     LocalDateTime dataTransacao,
+                     BigDecimal valor,
+                     StatusTransacao statusTransacao,
+                     TipoTransacao tipoTransacao) {
         this.contaOrigem = contaOrigem;
         this.contaDestinatario = contaDestinatario;
         this.dataTransacao = dataTransacao;
         this.valor = valor;
         this.statusTransacao = statusTransacao;
+        this.tipoTransacao = tipoTransacao;
     }
 
+
     public Transacao() {
+    }
+
+    public TipoTransacao getTipoTransacao() {
+        return tipoTransacao;
+    }
+
+    public void setTipoTransacao(TipoTransacao tipoTransacao) {
+        this.tipoTransacao = tipoTransacao;
     }
 
     public Long getId() {

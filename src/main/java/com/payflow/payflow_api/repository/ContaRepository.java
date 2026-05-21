@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface ContaRepository extends JpaRepository<Conta, Long> {
 
     Optional<Conta> findByNumeroConta(UUID numeroConta);
+
+    boolean existsByNumeroConta(UUID numeroDaConta);
 }

@@ -4,6 +4,7 @@ import com.payflow.payflow_api.dto.request.CriarUsuarioRequest;
 import com.payflow.payflow_api.dto.response.UsuarioResponse;
 import com.payflow.payflow_api.service.UsuarioService;
 import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     @ResponseStatus(OK)
-    public UsuarioResponse buscarUsuario(@PathVariable Long id) {
+    public UsuarioResponse buscarUsuario(@Validated @PathVariable Long id) {
         return usuarioService.buscarUsuario(id);
     }
     @GetMapping()
