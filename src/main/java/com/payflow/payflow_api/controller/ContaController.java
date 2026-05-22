@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/contas")
@@ -38,5 +37,11 @@ public class ContaController {
     @ResponseStatus(OK)
     public String extratoConta(@Validated @PathVariable UUID numeroConta) {
         return contaService.extratoConta(numeroConta);
+    }
+
+    @PostMapping("/extrato/{numeroConta}/exportar")
+    @ResponseStatus(NO_CONTENT)
+    public void exportarExtrato(@Validated @PathVariable UUID numeroConta) {
+       contaService.exportarExtrato(numeroConta);
     }
 }

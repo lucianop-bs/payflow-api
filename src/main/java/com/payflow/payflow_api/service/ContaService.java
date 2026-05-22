@@ -7,18 +7,23 @@ import com.payflow.payflow_api.dto.request.DepositarRequest;
 import com.payflow.payflow_api.dto.response.ContaResponse;
 import com.payflow.payflow_api.dto.response.DepositoResponse;
 import com.payflow.payflow_api.exception.RecursoNaoEncontrado;
+import com.payflow.payflow_api.exception.RegraDeNegocioException;
 import com.payflow.payflow_api.repository.ContaRepository;
 import com.payflow.payflow_api.repository.UsuarioRepository;
 import com.payflow.payflow_api.utils.ExtratoBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class ContaService {
+public class ContaService  {
     private final ContaRepository contaRepository;
     private final UsuarioRepository usuarioRepository;
 
@@ -74,5 +79,19 @@ public class ContaService {
 
         return ExtratoBuilder.gerarExtrato(cabecalho,linhasRecebidas,linhasEnviadas);
     }
+    @Transactional
+    public void exportarExtrato(UUID numeroConta)  {
+         var extrato = extratoConta(numeroConta);
+
+         new File("extratos").mkdirs();
+
+         try(var writer = new BufferedWriter(new FileWriter(String.format("extratos/extrato_%s.txt",numeroConta)))) {
+             writer.write(extrato);
+
+         }catch (IOException e){
+             throw new RegraDeNegocioException("Extrato não foi criado!");
+         }
+    }
+
 
 }
