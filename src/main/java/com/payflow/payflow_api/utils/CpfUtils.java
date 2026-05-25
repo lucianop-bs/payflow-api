@@ -4,14 +4,16 @@ public class CpfUtils {
 
     private CpfUtils() {
     }
-
+    private static final int[] PESOS_PRIMEIRO_DIGITO = {10, 9, 8, 7, 6, 5, 4, 3, 2};
+    private static final int[] PESOS_SEGUNDO_DIGITO  = {11, 10, 9, 8, 7, 6, 5, 4, 3,
+            2};
     public static String limpar(String cpf) {
         return cpf.replace("-", "")
                 .replace(".", "");
     }
     public static boolean validaCPF(String cpf) {
-       return verificarPrimeiroDigito(cpf) && verificarSegundoDigito(cpf);
-
+        return verificarDigito(cpf, PESOS_PRIMEIRO_DIGITO, 9)
+                && verificarDigito(cpf, PESOS_SEGUNDO_DIGITO, 10);
     }
     public static String formatar(String cpf) {
         var cpfLimpo = limpar(cpf);
@@ -23,34 +25,17 @@ public class CpfUtils {
         return String.format("%s.%s.%s-%s", bloco1, bloco2, bloco3, bloco4);
     }
 
-    private static boolean verificarPrimeiroDigito (String cpf){
-        var peso = 0;
-        var digito = 0;
+    private static boolean verificarDigito(String cpf, int[] pesos, int
+            posicaoDigito) {
         var soma = 0;
-        var validacaoPrimeiroBloco = cpf.substring(0,9);
-        var validacaoPrimeiroNumero = cpf.substring(9,10);
-        for (int i = 0; i < validacaoPrimeiroBloco.length(); i++) {
-            peso = 10 - i;
-            digito = cpf.charAt(i) - '0';
-            soma += digito * peso;
+        for (int i = 0; i < pesos.length; i++) {
+            var digito = cpf.charAt(i) - '0';
+            soma += digito * pesos[i];
         }
-        return validar(soma, validacaoPrimeiroNumero);
-
+        var digitoReal = cpf.substring(posicaoDigito, posicaoDigito + 1);
+        return validar(soma, digitoReal);
     }
-    private static boolean verificarSegundoDigito (String cpf){
-        var peso = 0;
-        var digito = 0;
-        var soma = 0;
-        var validacaoPrimeiroBloco = cpf.substring(0,10);
-        var validacaoPrimeiroNumero = cpf.substring(10,11);
-        for (int i = 0; i < validacaoPrimeiroBloco.length(); i++) {
-            peso = 11 - i;
-            digito = cpf.charAt(i) - '0';
-            soma += digito * peso;
-        }
-        return validar(soma, validacaoPrimeiroNumero);
 
-    }
 
     private static boolean validar(int soma, String validacaoNumero) {
         var resultadoParcial = soma % 11;

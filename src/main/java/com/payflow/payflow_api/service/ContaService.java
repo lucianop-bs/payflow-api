@@ -1,6 +1,7 @@
 package com.payflow.payflow_api.service;
 
 import com.payflow.payflow_api.domain.Conta;
+import com.payflow.payflow_api.domain.Transacao;
 import com.payflow.payflow_api.domain.Usuario;
 import com.payflow.payflow_api.dto.request.CriarContaRequest;
 import com.payflow.payflow_api.dto.request.DepositarRequest;
@@ -20,7 +21,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 public class ContaService  {
@@ -74,10 +77,17 @@ public class ContaService  {
 
         var cabecalho = ExtratoBuilder.gerarCabecalho(conta.getUsuario().getNome(),
                 conta.getNumeroConta().toString());
-        var linhasEnviadas = conta.getTransacoesEnviadas().stream().map(t -> ExtratoBuilder.gerarLinhaTransacao(t.getTipoTransacao(),ExtratoBuilder.gerarDescricao(t.getTipoTransacao()),t.getValor())).toList();
-        var linhasRecebidas = conta.getTransacoesRecebidas().stream().map(t -> ExtratoBuilder.gerarLinhaTransacao(t.getTipoTransacao(),ExtratoBuilder.gerarDescricao(t.getTipoTransacao()),t.getValor())).toList();
 
-        return ExtratoBuilder.gerarExtrato(cabecalho,linhasRecebidas,linhasEnviadas);
+        var streamEnviadas = conta.getTransacoesEnviadas().stream();
+        var streamRecebidas = conta.getTransacoesRecebidas().stream();
+        var todasLinhas = Stream.concat(streamEnviadas, streamRecebidas).sorted(Comparator.comparing(Transacao::getDataTransacao)).map(t -> {
+            boolean enviada = t.getContaOrigem().getId().equals(conta.getId());
+            String direcao = enviada ? "-" : "+";
+            String linha = ExtratoBuilder.gerarLinhaTransacao(t.getTipoTransacao(),ExtratoBuilder.gerarDescricao(t.getTipoTransacao()),t.getValor(),t.getDataTransacao());
+            return String.format("%s (%s)",linha,direcao);
+        }).toList();
+
+        return ExtratoBuilder.gerarExtrato(cabecalho,todasLinhas);
     }
     @Transactional
     public void exportarExtrato(UUID numeroConta)  {
